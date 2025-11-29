@@ -18,6 +18,7 @@ def setInfoCourse(position):
     name = input(f"Input course #{position}'s name: ")
     course = {"name": name, "ID": id, "students": []}
     return course
+    
 
 def grade_input(course, student):
     ID = student["ID"]
@@ -25,6 +26,22 @@ def grade_input(course, student):
     course_id = course["ID"]
     gpa = float(input(f"Input student {student_name}'s GPA for {course_id}: "))
     course["students"].extend([{"ID": ID, "name": student_name, "Mark": gpa}])
+
+def chooseCourse(courses, students):
+    # Arguments: the list of courses and list of students
+    course_found = False
+    course_name = input("Please enter a course name: ")
+    for course in courses:
+        if course_name == course["name"]:
+            course_found = True
+            for student in students:
+                grade_input(course, student)
+        else:
+            continue
+    if course_found:
+        print("Student's mark successfully entered!")
+    else:
+        print(f"No course with name {course_name} was founded! Try again!")
 
 def showCourseInfo(course):
     for record in course:
@@ -52,7 +69,8 @@ for i in range(0, nCourse):
 for record in courses:
     print(record)
 
-for course in courses:
-    for student in students:
-        grade_input(course, student)
+#for course in courses:
+#    for student in students:
+#        grade_input(course, student)
+chooseCourse(courses, students)
 showCourseInfo(courses)
