@@ -16,9 +16,21 @@ def setNumCourse():
 def setInfoCourse(position):
     id = input(f"Input course #{position}'s ID: ")
     name = input(f"Input course #{position}'s name: ")
-    course = {"name": name, "ID": id}
+    course = {"name": name, "ID": id, "students": []}
     return course
 
+def enroll(course, student):
+    ID = student["ID"]
+    student_name = student["name"]
+    course_name = course["name"]
+    gpa = float(input(f"Input student {student_name}'s GPA for {course_name}: "))
+    course["students"].extend([{"ID": ID, "name": student_name, "Mark": gpa}])
+
+def showCourseInfo(course):
+    for record in course:
+        print(f"Student result for {record["name"]}: ")
+        for student in record["students"]:
+            print(student, ", GPA: ", student["Mark"])
 nStudent = setNumStudent()
 students = []
 
@@ -38,3 +50,7 @@ for i in range(0, nCourse):
 
 for record in courses:
     print(record)
+
+for record in students:
+    enroll(courses[0], record)
+showCourseInfo(courses)
