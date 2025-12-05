@@ -29,12 +29,12 @@ class Course:
         self.name = name
     def getName(self):
         return self.name
-    def setMark(self, students):
+    def input(self, students):
         self.students = students
         for student in self.students:
             gpa = float(input(f"Enter student {student["Student"].getID()}'s GPA for {self.getID()}: "))
             student["GPA"] = gpa
-    def getMark(self):
+    def list(self):
         print(f"Student's information on {self.getName()}: ")
         for student in self.students:
             print(f"Name: {student["Student"].getName()}")
@@ -61,9 +61,9 @@ def chooseCourse(courses, students):
     course_found = False
     course_name = input("Enter a course name to input student's mark: ")
     for course in courses:
-        if course_name == course.getName():
+        if course_name.upper() == (course.getName()).upper():
             course_found = True
-            course.setMark(students)
+            course.input(students)
         else:
             continue
     if course_found:
@@ -76,9 +76,9 @@ def showResult(courses, students):
     course_found = False
     course_name = input("Enter course name: ")
     for course in courses:
-        if course_name == course.getName():
+        if course_name.upper() == (course.getName()).upper():
             course_found = True
-            course.getMark()
+            course.list()
         else:
             continue
     if course_found:
