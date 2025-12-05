@@ -37,10 +37,10 @@ class Course:
     def list(self):
         print(f"Student's information on {self.getName()}: ")
         for student in self.students:
-            print(f"Name: {student["Student"].getName()}")
-            print(f"Student ID: {student["Student"].getID()}")
-            print(f"Date of birth: {student["Student"].getDoB()}")
-            print(f"GPA: {student["GPA"]}")
+            print(f"Name: {student["Student"].getName()} "
+                  f"| Student ID: {student["Student"].getID()} "
+                  f"| DOB: {student["Student"].getDoB()} "
+                  f"| GPA: {student["GPA"]}")
     
 def setStudent():
     n = int(input("Enter the number of students in class: "))
@@ -55,6 +55,18 @@ def setStudent():
             student.setDoB(sDoB)
             students.extend([{"Student": student}])
     return students
+
+def setCourse():
+    courses = []
+    n = int(input("Enter the number of courses: "))
+    for i in range(0, n):
+        course = Course()
+        name = input(f"Enter course #{i+1}'s name: ")
+        course.setName(name)
+        ID = input(f"Enter course #{i+1}'s ID: ")
+        course.setID(ID)
+        courses.extend([course])
+    return courses
 
 def chooseCourse(courses, students):
     # Arguments: the list of courses and list of students
@@ -87,15 +99,7 @@ def showResult(courses, students):
         print(f"No course with name {course_name} was founded! Try again!")
 
 students = setStudent()
-courses = []
-n = int(input("Enter the number of courses: "))
-for i in range(0, n):
-    course = Course()
-    name = input(f"Enter course #{i+1}'s name: ")
-    course.setName(name)
-    ID = input(f"Enter course #{i+1}'s ID: ")
-    course.setID(ID)
-    courses.extend([course])
+courses = setCourse()
 
 chooseCourse(courses, students)
 showResult(courses, students)
