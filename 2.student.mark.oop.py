@@ -29,15 +29,20 @@ class Course:
         self.name = name
     def getName(self):
         return self.name
-    def setStudent(self, students):
+    def setMark(self, students):
         self.students = students
         for student in self.students:
-            gpa = float(input(f"Enter student {student["Name"]}'s GPA for {self.getID()}: "))
+            gpa = float(input(f"Enter student {student["Student"].getID()}'s GPA for {self.getID()}: "))
             student["GPA"] = gpa
-    def getStudent(self):
-        return self.students
+    def getMark(self):
+        print(f"Student's information on {self.getName()}: ")
+        for student in self.students:
+            print(f"Name: {student["Student"].getName()}")
+            print(f"Student ID: {student["Student"].getID()}")
+            print(f"Date of birth: {student["Student"].getDoB()}")
+            print(f"GPA: {student["GPA"]}")
     
-def setNumStudent():
+def setStudent():
     n = int(input("Enter the number of students in class: "))
     students = []
     for i in range(0, n):
@@ -48,12 +53,49 @@ def setNumStudent():
             student.setName(sName)
             student.setID(sID)
             student.setDoB(sDoB)
-            students.extend([{"ID": student.getID(), "Name": student.getName(), "DoB": student.getDoB()}])
+            students.extend([{"Student": student}])
     return students
 
-Math = Course()
-Math.setID(123)
-Math.setName("Mathematics")
-students = setNumStudent()
-Math.setStudent(students)
-print(Math.getStudent())
+def chooseCourse(courses, students):
+    # Arguments: the list of courses and list of students
+    course_found = False
+    course_name = input("Enter a course name to input student's mark: ")
+    for course in courses:
+        if course_name == course.getName():
+            course_found = True
+            course.setMark(students)
+        else:
+            continue
+    if course_found:
+        print("Student's mark successfully entered!")
+    else:
+        print(f"No course with name {course_name} was founded! Try again!")
+
+def showResult(courses, students):
+    print("Showing students' mark: ")
+    course_found = False
+    course_name = input("Enter course name: ")
+    for course in courses:
+        if course_name == course.getName():
+            course_found = True
+            course.getMark()
+        else:
+            continue
+    if course_found:
+        print("Done!")
+    else:
+        print(f"No course with name {course_name} was founded! Try again!")
+
+students = setStudent()
+courses = []
+n = int(input("Enter the number of courses: "))
+for i in range(0, n):
+    course = Course()
+    name = input(f"Enter course #{i+1}'s name: ")
+    course.setName(name)
+    ID = input(f"Enter course #{i+1}'s ID: ")
+    course.setID(ID)
+    courses.extend([course])
+
+chooseCourse(courses, students)
+showResult(courses, students)
