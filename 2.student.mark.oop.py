@@ -2,104 +2,166 @@ class Student:
     def __init__(self):
         self.__id = None
         self.__name = None
-        self.__DoB = None
-    def setID(self, ID):
-        self.ID = ID
-    def getID(self):
-        return self.ID
-    def setName(self, name):
-        self.name = name
-    def getName(self):
-        return self.name
-    def setDoB(self, DoB):
-        self.DoB = DoB
-    def getDoB(self):
-        return self.DoB
+        self.__dob = None
     
+    # Setter and Getter
+    def setID(self, id):
+        self.__id = id
+    def getID(self):
+        return self.__id
+    
+    def setName(self, name):
+        self.__name = name
+    def getName(self):
+        return self.__name
+    
+    def setDOB(self, dob):
+        self.__dob = dob
+    def getDOB(self):
+        return self.__dob
+    
+    # Input method
+    def input(self):
+        name = input("Enter student name: ")
+        id = input("Enter student ID: ")
+        dob = input("Enter student's date of birth: ")
+        self.setID(id)
+        self.setName(name)
+        self.setDOB(dob)
+
+    # Display method
+    def display(self):
+        print(f"Name: {self.getName()} | ID: {self.getID()} | DOB: {self.getDOB()}")
+
 class Course:
     def __init__(self):
         self.__id = None
         self.__name = None
-        self.__students = None
-    def setID(self, ID):
-        self.ID = ID
-    def getID(self):
-        return self.ID
-    def setName(self, name):
-        self.name = name
-    def getName(self):
-        return self.name
-    def input(self, students):
-        self.students = students
-        for student in self.students:
-            gpa = float(input(f"Enter student {student["Student"].getID()}'s GPA for {self.getID()}: "))
-            student["GPA"] = gpa
-    def list(self):
-        print(f"Student's information on {self.getName()}: ")
-        for student in self.students:
-            print(f"Name: {student["Student"].getName()} "
-                  f"| Student ID: {student["Student"].getID()} "
-                  f"| DOB: {student["Student"].getDoB()} "
-                  f"| GPA: {student["GPA"]}")
     
-def setStudent():
-    n = int(input("Enter the number of students in class: "))
-    students = []
-    for i in range(0, n):
-            student = Student()
-            sName = input(f"Enter student #{i+1}'s name: ")
-            sID = input(f"Enter student #{i+1}'s ID: ")
-            sDoB = input(f"Enter student #{i+1}'s birthday: ")
-            student.setName(sName)
-            student.setID(sID)
-            student.setDoB(sDoB)
-            students.extend([{"Student": student}])
-    return students
+    # Setter and Getter
+    def setID(self, id):
+        self.__id = id
+    def getID(self):
+        return self.__id
+    
+    def setName(self, name):
+        self.__name = name
+    def getName(self):
+        return self.__name
+    
+    # Input method
+    def input(self):
+        name = input("Enter course name: ")
+        id = input("Enter course ID: ")
+        self.setID(id)
+        self.setName(name)
 
-def setCourse():
-    courses = []
-    n = int(input("Enter the number of courses: "))
-    for i in range(0, n):
-        course = Course()
-        name = input(f"Enter course #{i+1}'s name: ")
-        course.setName(name)
-        ID = input(f"Enter course #{i+1}'s ID: ")
-        course.setID(ID)
-        courses.extend([course])
-    return courses
+    # Display method
+    def display(self):
+        print(f"Course name: {self.getName()} | ID: {self.getID()}")
 
-def chooseCourse(courses, students):
-    # Arguments: the list of courses and list of students
-    course_found = False
-    course_name = input("Enter a course name to input student's mark: ")
-    for course in courses:
-        if course_name.upper() == (course.getName()).upper():
-            course_found = True
-            course.input(students)
+class Mark:
+    def __init__(self):
+        self.__gpa = None
+        self.__student = None
+        self.__course = None
+    
+    def setMark(self, gpa):
+        self.__gpa = gpa
+    def getMark(self):
+        return self.__gpa
+    
+    def setStudent(self, student):
+        self.__student = student
+    def getStudent(self):
+        return self.__student
+    
+    def setCourse(self, course):
+        self.__course = course
+    def getCourse(self):
+        return self.__course
+    
+    def input(self, student, course):
+        self.setStudent(student)
+        self.setCourse(course)
+        gpa = float(input(f"Enter {student.getName()}'s GPA for {course.getName()}: "))
+        self.setMark(gpa)
+    
+    def display(self):
+        print(f"Course: {self.__course.getName()}"
+              f"| Name: {self.__student.getName()}"
+              f"| ID: {self.__student.getID()}"
+              f"| Result: {self.getMark()}")
+
+class mark_management:
+    def __init__(self):
+        self.__courses = None
+        self.__students = None
+        self.__marks = None
+
+    def setCourses(self):
+        self.__courses = []
+        n = int(input("Enter the number of courses: "))
+        for i in range(n):
+            print(f"Course number #{i+1}: ")
+            c = Course()
+            c.input()
+            self.__courses.append(c)
+    def getCourses(self):
+        print("All courses' informations: ")
+        for c in self.__courses:
+            c.display()
+    
+    def setStudents(self):
+        self.__students = []
+        n = int(input("Enter the number of students: "))
+        for i in range(n):
+            print(f"Student number #{i+1}: ")
+            s = Student()
+            s.input()
+            self.__students.append(s)
+    def getStudents(self):
+        print("All students' informations: ")
+        for s in self.__students:
+            s.display()
+
+    def setMarks(self, course):
+        # Set the mark of students for 1 particular course
+        self.__marks = []
+        print(f"Enter students' mark for {course.getName()}: ")
+        for s in self.__students:
+            m = Mark()
+            m.input(s, course)
+            self.__marks.append(m)
+    def getMarks(self):
+        print("Students' result for the class: ")
+        for m in self.__marks:
+            m.display()
+    
+    def input(self):
+        self.setStudents()
+        self.setCourses()
+
+        # Choose 1 course to input students' mark
+        founded = False
+        course_name = input("Enter a course name to input marks: ")
+        for c in self.__courses:
+            if course_name.upper() == c.getName().upper():
+                founded = True
+                self.setMarks(c)
+            else:
+                continue
+        if founded:
+            print("Done!")
         else:
-            continue
-    if course_found:
-        print("Student's mark successfully entered!")
-    else:
-        print(f"No course with name {course_name} was founded! Try again!")
+            print(f"No course with name {course_name} was founded, please try again!")
 
-def showResult(courses, students):
-    print("Showing students' mark: ")
-    course_found = False
-    course_name = input("Enter course name: ")
-    for course in courses:
-        if course_name.upper() == (course.getName()).upper():
-            course_found = True
-            course.list()
-        else:
-            continue
-    if course_found:
-        print("Done!")
-    else:
-        print(f"No course with name {course_name} was founded! Try again!")
 
-students = setStudent()
-courses = setCourse()
+    def display(self):
+        self.getCourses()
+        self.getStudents()
+        self.getMarks()
 
-chooseCourse(courses, students)
-showResult(courses, students)
+mm = mark_management()
+mm.input()
+mm.display()
