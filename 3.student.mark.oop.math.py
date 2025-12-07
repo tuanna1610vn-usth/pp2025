@@ -1,5 +1,6 @@
 import math
 import numpy as np
+import curses
 
 class Student:
     def __init__(self):
@@ -7,7 +8,6 @@ class Student:
         self.__name = None
         self.__dob = None
     
-    # Setter and Getter
     def setID(self, id):
         self.__id = id
     def getID(self):
@@ -23,18 +23,25 @@ class Student:
     def getDOB(self):
         return self.__dob
     
-    # Input method
-    def input(self):
-        name = input("Enter student name: ")
-        id = input("Enter student ID: ")
-        dob = input("Enter student's date of birth: ")
+    def input(self, stdscr):
+        curses.echo() # Enables showing characters from user input
+        stdscr.clear()
+        stdscr.addstr(0, 0, "===== ADD STUDENTS IN CLASS =====", curses.A_BOLD)
+
+        stdscr.addstr(4, 0, "Enter student name: ")
+        name = stdscr.getstr(4, 20, 30).decode('utf-8')
+        stdscr.addstr(5, 0, "Enter student ID: ")
+        id = stdscr.getstr(5, 20, 30).decode('utf-8')
+        stdscr.addstr(6, 0, "Enter student's date of birth: ")
+        dob = stdscr.getstr(6, 31, 30).decode('utf-8')
+
         self.setID(id)
         self.setName(name)
         self.setDOB(dob)
+        curses.noecho()
 
-    # Display method
     def display(self):
-        print(f"Name: {self.getName()} | ID: {self.getID()} | DOB: {self.getDOB()}")
+        return f"Name: {self.getName()} | ID: {self.getID()} | DOB: {self.getDOB()}"
 
 class Course:
     def __init__(self):
@@ -42,7 +49,6 @@ class Course:
         self.__name = None
         self.__credits = None
     
-    # Setter and Getter
     def setID(self, id):
         self.__id = id
     def getID(self):
@@ -58,18 +64,25 @@ class Course:
     def getCredit(self):
         return self.__credits
     
-    # Input method
-    def input(self):
-        name = input("Enter course name: ")
-        id = input("Enter course ID: ")
-        credits = int(input("Enter number of credits: "))
+    def input(self, stdscr):
+        curses.echo()
+        stdscr.clear()
+        stdscr.addstr(0, 0, "===== ADD COURSES =====", curses.A_BOLD)
+
+        stdscr.addstr(4, 0, "Enter course name: ")
+        name = stdscr.getstr(4, 20, 30).decode('utf-8')
+        stdscr.addstr(5, 0, "Enter course ID: ")
+        id = stdscr.getstr(5, 20, 30).decode('utf-8')
+        stdscr.addstr(6, 0, "Enter number of credits: ")
+        credits = stdscr.getstr(6, 31, 30).decode('utf-8')
+
         self.setID(id)
         self.setName(name)
-        self.setCredit(credits)
+        self.setCredit(int(credits))
+        curses.noecho()
 
-    # Display method
     def display(self):
-        print(f"Course name: {self.getName()} | ID: {self.getID()}")
+        return f"Course name: {self.getName()} | ID: {self.getID()}"
 
 class Mark:
     def __init__(self):
@@ -92,14 +105,18 @@ class Mark:
     def getCourse(self):
         return self.__course
     
-    def input(self, student, course):
+    def input(self, student, course, stdscr, y):
+        curses.echo()
         self.setStudent(student)
         self.setCourse(course)
-        gpa = float(input(f"Enter {student.getName()}'s GPA for {course.getName()}: "))
+
+        stdscr.addstr(y, 0, f"Enter {student.getName()}'s GPA for {course.getName()}: ")
+        gpa = float(stdscr.getstr(y, 50, 6).decode('utf-8'))
         self.setMark(math.floor(gpa))
+        curses.noecho()
     
     def display(self):
-        print(f"Course: {self.__course.getName()}"
+        return (f"Course: {self.__course.getName()}"
               f"| Name: {self.__student.getName()}"
               f"| ID: {self.__student.getID()}"
               f"| Result: {self.getMark()}")
@@ -110,43 +127,68 @@ class mark_management:
         self.__students = None
         self.__marks = None
 
-    def setCourses(self):
+    def setCourses(self, stdscr):
         self.__courses = []
-        n = int(input("Enter the number of courses: "))
+
+        curses.echo()
+        stdscr.clear()
+        stdscr.addstr(0, 0, "===== COURSE SETUP =====", curses.A_BOLD)
+        stdscr.addstr(2, 0, "Enter the number of courses: ")
+        n = int(stdscr.getstr(2, 30, 2).decode('utf-8'))
+        curses.noecho()
+
         for i in range(n):
-            print(f"Course number #{i+1}: ")
             c = Course()
-            c.input()
+            c.input(stdscr)
             self.__courses.append(c)
     def getCourses(self):
         return self.__courses
     
-    def setStudents(self):
+    def setStudents(self, stdscr):
         self.__students = []
-        n = int(input("Enter the number of students: "))
+
+        curses.echo()
+        stdscr.clear()
+        stdscr.addstr(0, 0, "===== STUDENT SETUP =====", curses.A_BOLD)
+        stdscr.addstr(2, 0, "Enter the number of students: ")
+        n = int(stdscr.getstr(2, 30, 2).decode('utf-8'))
+        curses.noecho()
+
         for i in range(n):
-            print(f"Student number #{i+1}: ")
             s = Student()
-            s.input()
+            s.input(stdscr)
             self.__students.append(s)
     def getStudents(self):
         return self.__students
 
-    def setMarks(self, course):
-        print(f"Enter students' mark for {course.getName()}: ")
+    def setMarks(self, course, stdscr):
+        stdscr.clear()
+        stdscr.addstr(0, 0, f"Enter students' mark for {course.getName()}: ", curses.A_BOLD | curses.A_UNDERLINE)
+        stdscr.addstr(1, 0, "-" * 100)
+
+        y = 3
         for s in self.__students:
             m = Mark()
-            m.input(s, course)
+            m.input(s, course, stdscr, y)
             self.__marks.append(m)
+            y += 1
     def getMarks(self):
         return self.__marks
     
-    def input(self):
+    def input(self, stdscr):
         self.__marks = []
-        self.setStudents()
-        self.setCourses()
+
+        stdscr.clear()
+        title = "STUDENT MANAGEMENT SYSTEM"
+        stdscr.addstr(10, 15, title, curses.A_BOLD | curses.A_REVERSE)
+        stdscr.addstr(12, 15, "Press any key to continue...")
+        stdscr.refresh()
+        stdscr.getch()
+
+        self.setStudents(stdscr)
+        self.setCourses(stdscr)
         for c in self.__courses:
-            self.setMarks(c)
+            self.setMarks(c, stdscr)
 
     def calGPA(self):
         student_results = []
@@ -170,36 +212,71 @@ class mark_management:
 
         return student_results
 
-    def rankings(self):
+    def rankings(self, stdscr):
+        stdscr.clear()
+        stdscr.addstr(0, 0, "===== STUDENT RANKINGS BY GPA =====", curses.A_BOLD)
+        stdscr.addstr(1, 0, "-" * 50)
+
         student_results = self.calGPA()
         ranked = sorted(student_results, key=lambda x: x["Average GPA"], reverse=True)
 
-        print("-" * 50)
-        print("Student Rankings by GPA: ")
-
         i = 1
         for r in ranked:
-            print(f"{i}. Student ID: {r["ID"]} | Name: {r["Name"]} | GPA: {r["Average GPA"]}")
+            stdscr.addstr(i+1, 0, f"{i}. Student ID: {r["ID"]} | Name: {r["Name"]} | GPA: {r["Average GPA"]}", curses.A_BOLD)
             i += 1
+        
+        stdscr.addstr(i+1, 0, "-" * 50)
+        stdscr.addstr(i+2, 0, "Press any key to continue...")
+        stdscr.refresh()
+        stdscr.getch()
 
 
-    def display(self):
-        print("-" * 50)
-        print("All courses' informations: ")
+    def display(self, stdscr):
+        stdscr.clear()
+        stdscr.addstr(0, 0, "===== ALL COURSES' INFORMATION =====", curses.A_BOLD)
+        stdscr.addstr(1, 0, "-" * 50)
+        y = 3
         for c in self.__courses:
-            c.display()
+            stdscr.addstr(y, 0, c.display())
+            y += 1
+        stdscr.addstr(y + 1, 0, "Press any key to continue...")
+        stdscr.refresh()
+        stdscr.getch()
         
-        print("-" * 50)
-        print("All students' informations: ")
+        stdscr.clear()
+        stdscr.addstr(0, 0, "===== ALL STUDENTS' INFORMATION =====", curses.A_BOLD)
+        stdscr.addstr(1, 0, "-" * 50)
+        y = 3
         for s in self.__students:
-            s.display()
+            stdscr.addstr(y, 0, s.display())
+            y += 1
+        stdscr.addstr(y + 1, 0, "Press any key to continue...")
+        stdscr.refresh()
+        stdscr.getch()
         
-        print("-" * 50)
-        print("Students' result for the class: ")
+        stdscr.clear()
+        stdscr.addstr(0, 0, "===== STUDENTS' RESULT =====", curses.A_BOLD)
+        stdscr.addstr(1, 0, "-" * 50)
+        y = 3
         for m in self.__marks:
-            m.display()
+            stdscr.addstr(y, 0, m.display())
+            y += 1
+        stdscr.addstr(y + 1, 0, "Press any key to continue...")
+        stdscr.refresh()
+        stdscr.getch()
 
-mm = mark_management()
-mm.input()
-mm.display()
-mm.rankings()
+def main(stdscr):
+    curses.curs_set(1)
+    mm = mark_management()
+    mm.input(stdscr)
+    mm.display(stdscr)
+    mm.rankings(stdscr)
+
+    stdscr.clear()
+    exit = "Thank you for using Student Management System!"
+    stdscr.addstr(10, 15, exit, curses.A_BOLD)
+    stdscr.addstr(12, 15, "Press any key to exit...")
+    stdscr.refresh()
+    stdscr.getch()
+
+curses.wrapper(main)
