@@ -35,7 +35,7 @@ def saveZip(init, stdscr):
 
         stdscr.clear()
         stdscr.addstr(5, 5, "Data saved and compressed successfully!", curses.A_BOLD)
-        stdscr.addstr(6, 5, "Press any key to continue....")
+        stdscr.addstr(6, 5, "Press any key to exit....")
         stdscr.refresh()
         stdscr.getch()
     except Exception as e:

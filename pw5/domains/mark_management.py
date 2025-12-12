@@ -49,18 +49,35 @@ class mark_management:
 
         y = 3
         for s in self.__students:
-            m = Mark.Mark()
-            m.input(s, course, stdscr, y)
-            self.__marks.append(m)
-            y += 1
+            # If a student and their courses' mark already exist in the text file, then skip
+            if os.path.exists("marks.txt"):
+                duplicated = False
+                with open("marks.txt", "r") as f:
+                    for line in f:
+                        parts = line.strip().split("|")
+                        if parts[2] == s.getID() and parts[0] == course.getID():
+                            duplicated = True
+                            break
+                if duplicated:
+                    continue
+                else:
+                    m = Mark.Mark()
+                    m.input(s, course, stdscr, y)
+                    self.__marks.append(m)
+                    y += 1
+            else:
+                m = Mark.Mark()
+                m.input(s, course, stdscr, y)
+                self.__marks.append(m)
+                y += 1
     def getMarks(self):
         return self.__marks
     
     def input(self, stdscr):
         stdscr.clear()
         title = "STUDENT MANAGEMENT SYSTEM"
-        stdscr.addstr(10, 15, title, curses.A_BOLD | curses.A_REVERSE)
-        stdscr.addstr(12, 15, "Press any key to continue...")
+        stdscr.addstr(10, 20, title, curses.A_BOLD | curses.A_REVERSE)
+        stdscr.addstr(12, 20, "Press any key to continue...")
         stdscr.refresh()
         stdscr.getch()
 
@@ -179,16 +196,48 @@ class mark_management:
             pass
     
     def saveFiles(self):
+        # Save file with check for duplicated information
         for s in self.__students:
-            with open("students.txt", "a") as f:
-                f.write(f"{s.getID()}|{s.getName()}|{s.getDOB()}\n")
-        for c in self.__courses:
-            with open("courses.txt", "a") as f:
-                f.write(f"{c.getID()}|{c.getName()}|{c.getCredit()}\n")
-        for m in self.__marks:
-            with open("marks.txt", "a") as f:
-                f.write(f"{m.getCourse().getID()}|{m.getStudent().getName()}|{m.getStudent().getID()}|{m.getMark()}\n")
+            duplicated = False
+            with open("students.txt", "r") as f:
+                for line in f:
+                    parts = line.strip().split("|")
+                    if parts[0] == s.getID():
+                        duplicated = True
+                        break
+            if duplicated:
+                continue
+            else:
+                with open("students.txt", "a") as f:
+                    f.write(f"{s.getID()}|{s.getName()}|{s.getDOB()}\n")
 
+        for c in self.__courses:
+            duplicated = False
+            with open("courses.txt", "r") as f:
+                for line in f:
+                    parts = line.strip().split("|")
+                    if parts[0] == c.getID():
+                        duplicated = True
+                        break
+                if duplicated:
+                    continue
+                else:
+                    with open("courses.txt", "a") as f:
+                        f.write(f"{c.getID()}|{c.getName()}|{c.getCredit()}\n")
+
+        for m in self.__marks:
+            duplicated = False
+            with open("marks.txt", "r") as f:
+                for line in f:
+                    parts = line.strip().split("|")
+                    if parts[0] == m.getCourse().getID() and parts[2] == m.getStudent().getID():
+                        duplicated = True
+                        break
+                if duplicated:
+                    continue
+                else:
+                    with open("marks.txt", "a") as f:
+                        f.write(f"{m.getCourse().getID()}|{m.getStudent().getName()}|{m.getStudent().getID()}|{m.getMark()}\n")
 
 def new():
     mm = mark_management()

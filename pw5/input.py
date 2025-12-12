@@ -18,7 +18,7 @@ def input(stdscr):
             
             stdscr.clear()
             stdscr.addstr(0, 0, "Data loaded successfully!", curses.A_BOLD)
-            stdscr.addstr(0, 5, "Press any key to continue...")
+            stdscr.addstr(1, 0, "Press any key to continue...")
             stdscr.refresh()
             stdscr.getch()
         except Exception as e:
