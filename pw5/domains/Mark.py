@@ -34,6 +34,6 @@ class Mark:
     
     def display(self):
         return (f"Course: {self.__course.getName()}"
-              f"| Name: {self.__student.getName()}"
-              f"| ID: {self.__student.getID()}"
-              f"| Result: {self.getMark()}")
+              f" | Name: {self.__student.getName()}"
+              f" | ID: {self.__student.getID()}"
+              f" | Result: {self.getMark()}")

@@ -1,9 +1,10 @@
 from domains import mark_management as mm
+from output import saveZip
 import curses
 import zipfile
 import os
 
-def input(stdscr):
+def input(stdscr, choice):
     curses.curs_set(1)
     init = mm.new()
 
@@ -27,5 +28,10 @@ def input(stdscr):
             stdscr.refresh()
             return
 
-    init.input(stdscr)
+    if choice == "1":
+        init.display(stdscr)
+        init.rankings(stdscr)
+        saveZip(init, stdscr)
+    elif choice == "2":
+        init.input(stdscr)
     return init

@@ -10,7 +10,7 @@ def output(init, stdscr):
     stdscr.clear()
     exit = "Thank you for using Student Management System!"
     stdscr.addstr(10, 15, exit, curses.A_BOLD)
-    stdscr.addstr(12, 15, "Press any key to exit...")
+    stdscr.addstr(12, 15, "Press any key to save and compress data...")
     stdscr.refresh()
     stdscr.getch()
 
@@ -34,8 +34,8 @@ def saveZip(init, stdscr):
                 os.remove("marks.txt")
 
         stdscr.clear()
-        stdscr.addstr(5, 5, "Data saved and compressed successfully!", curses.A_BOLD)
-        stdscr.addstr(6, 5, "Press any key to exit....")
+        stdscr.addstr(10, 15, "Data saved and compressed successfully!", curses.A_BOLD)
+        stdscr.addstr(12, 15, "Press any key to exit....")
         stdscr.refresh()
         stdscr.getch()
     except Exception as e:
