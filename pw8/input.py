@@ -6,10 +6,22 @@ import os
 def input(stdscr, choice, markManagement):
     curses.curs_set(1)
     if choice == "1":
-        markManagement.display(stdscr)
+        markManagement.displayAllStudents(stdscr)
         markManagement.rankings(stdscr)
     elif choice == "2":
-        markManagement.input(stdscr)
+        markManagement.displayAllCourses(stdscr)
+    elif choice == "3":
+        markManagement.displayAllMarks(stdscr)
+    elif choice == "4":
+        markManagement.setStudents(stdscr)
+    elif choice == "5":
+        markManagement.setCourses(stdscr)
+    elif choice == "6":
+        markManagement.setMarks(stdscr)
+    elif choice == "7":
+        markManagement.searchStudent(stdscr)
+    elif choice == "8":
+        markManagement.searchCourse(stdscr)
 
 class loadThread(threading.Thread):
     def __init__(self, markManagement, stdscr):
